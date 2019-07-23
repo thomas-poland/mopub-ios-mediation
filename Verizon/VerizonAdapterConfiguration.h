@@ -12,6 +12,14 @@
 extern NSErrorDomain const kMoPubVASAdapterErrorDomain;
 extern NSString * const kMoPubVASAdapterErrorWho;
 
+/// Error codes that are used by VASErrorInfo in the core error domain.
+typedef NS_ENUM(NSInteger, MoPubVASAdapterError) {
+    /// The adapter is not properly configured.
+    MoPubVASAdapterErrorInvalidConfig = 1,
+    /// The Verizon SDK was not properly initialized.
+    MoPubVASAdapterErrorNotInitialized
+};
+
 // Configuration keys
 extern NSString * const kMoPubVASAdapterPlacementId;
 extern NSString * const kMoPubVASAdapterSiteId;

@@ -1,4 +1,3 @@
-
 #import <VerizonAdsInlinePlacement/VerizonAdsInlinePlacement.h>
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 #import "MPVerizonBannerCustomEvent.h"
@@ -75,6 +74,8 @@
     }
     
     VASInlineAdSize *requestedSize = [[VASInlineAdSize alloc] initWithWidth:size.width height:size.height];
+
+    [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
     [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];

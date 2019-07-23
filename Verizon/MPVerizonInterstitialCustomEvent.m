@@ -79,6 +79,8 @@
         [self.delegate interstitialCustomEvent:self didFailToLoadAdWithError:error];
         return;
     }
+
+    [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
     [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
