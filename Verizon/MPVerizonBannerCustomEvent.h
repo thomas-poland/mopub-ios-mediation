@@ -12,7 +12,7 @@
 
 + (void)requestBidWithPlacementId:(nonnull NSString *)placementId
                           adSizes:(nonnull NSArray<VASInlineAdSize *> *)adSizes
-                       completion:(void (^)(VASBid * _Nullable bid, VASErrorInfo * _Nullable error))completion;
+                       completion:(void (^_Nonnull)(VASBid * _Nullable bid, VASErrorInfo * _Nullable error))completion;
 @end
 
 

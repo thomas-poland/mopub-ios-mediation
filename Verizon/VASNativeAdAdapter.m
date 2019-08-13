@@ -1,5 +1,6 @@
 #import "VASNativeAdAdapter.h"
 #import "MPNativeAdConstants.h"
+#import "MPLogging.h"
 
 NSString * const kVASDisclaimerKey = @"vasdisclaimer";
 NSString * const kVASVideoViewKey = @"vasvideoview";
@@ -14,16 +15,18 @@ static NSString * const kIconImageCompId    = @"iconImage";
 static NSString * const kVideoCompId        = @"video";
 
 @interface VASNativeAdAdapter()
+@property (nonatomic, strong) NSString *siteId;
 @property (nonatomic, strong) VASNativeAd *vasNativeAd;
 @property (nonatomic, strong) NSDictionary<NSString *, id> *vasAdProperties;
 @end
 
 @implementation VASNativeAdAdapter
 
-- (instancetype)initWithVASNativeAd:(VASNativeAd *)vasNativeAd
+- (instancetype)initWithVASNativeAd:(VASNativeAd *)vasNativeAd siteId:(NSString *)siteId
 {
     if (self = [super init])
     {
+        _siteId = siteId;
         _vasNativeAd = vasNativeAd;
 
         // MoPub Native Properties
@@ -107,6 +110,10 @@ static NSString * const kVideoCompId        = @"video";
 
 - (void)willAttachToView:(UIView *)view
 {
+    MPLogAdEvent([MPLogEvent adWillAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
     [self.delegate nativeAdWillLogImpression:self];
     [self.vasNativeAd fireImpression];
 }
@@ -115,33 +122,45 @@ static NSString * const kVideoCompId        = @"video";
 
 - (void)nativeAdClickedWithComponentBundle:(nonnull id<VASNativeComponentBundle>)nativeComponentBundle
 {
-    MPLogDebug(@"VAS native ad clicked - %@.", nativeComponentBundle);
+    MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate nativeAdDidClick:self];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate nativeAdDidClick:strongSelf];
+        }
     });
 }
 
 - (void)nativeAdDidClose:(nonnull VASNativeAd *)nativeAd
 {
-    MPLogDebug(@"VAS native ad closed - %@.", nativeAd);
+    MPLogAdEvent([MPLogEvent adDidDisappearForAdapter:NSStringFromClass(self.class)], self.siteId);
 }
 
 - (void)nativeAdDidFail:(nonnull VASNativeAd *)nativeAd withError:(nonnull VASErrorInfo *)errorInfo
 {
-    MPLogWarn(@"VAS native ad failed with error %@.", errorInfo.description);
+    MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:errorInfo], self.siteId);
 }
 
 - (void)nativeAdDidLeaveApplication:(nonnull VASNativeAd *)nativeAd
 {
-    MPLogDebug(@"VAS native ad did leave application - %@.", nativeAd);
+    MPLogAdEvent([MPLogEvent adWillLeaveApplicationForAdapter:NSStringFromClass(self.class)], self.siteId);
+
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate nativeAdWillLeaveApplicationFromAdapter:self];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate nativeAdWillLeaveApplicationFromAdapter:strongSelf];
+        }
     });
 }
 
 - (void)nativeAdEvent:(nonnull VASNativeAd *)nativeAd source:(nonnull NSString *)source eventId:(nonnull NSString *)eventId arguments:(nonnull NSDictionary<NSString *,id> *)arguments
 {
-    MPLogTrace(@"VAS native ad event - %@, source %@, eventId %@, args %@.", nativeAd, source, eventId, arguments);
+    MPLogTrace(@"VAS nativeAdEvent: %@, source: %@, eventId: %@, arguments: %@", nativeAd, source, eventId, arguments);
 }
 
 - (nullable UIViewController *)nativeAdPresentingViewController

@@ -11,7 +11,7 @@
 @interface MPVerizonInterstitialCustomEvent : MPInterstitialCustomEvent
 
 + (void)requestBidWithPlacementId:(nonnull NSString *)placementId
-                       completion:(void (^)(VASBid * _Nullable bid, VASErrorInfo * _Nullable error))completion;
+                       completion:(void (^_Nonnull)(VASBid * _Nullable bid, VASErrorInfo * _Nullable error))completion;
 
 @end
 

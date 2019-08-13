@@ -1,4 +1,5 @@
 #import "MPRewardedVideoCustomEvent.h"
+#import "MoPub.h"
 
 @class VASCreativeInfo;
 
