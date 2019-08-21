@@ -4,8 +4,6 @@
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 #import <VerizonAdsInterstitialPlacement/VASInterstitialAd.h>
 #import <VerizonAdsInterstitialPlacement/VASInterstitialAdFactory.h>
-#import "VASAdapterVersion.h"
-#import "MPVerizonErrors.h"
 #import "VerizonAdapterConfiguration.h"
 
 static NSString *const kMoPubVASAdapterAdUnit = @"adUnitID";
@@ -13,6 +11,7 @@ static NSString *const kMoPubVASAdapterDCN = @"dcn";
 static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete";
 
 @interface MPVerizonRewardedVideoCustomEvent () <VASInterstitialAdDelegate, VASInterstitialAdFactoryDelegate>
+@property (nonatomic, strong) NSString *siteId;
 @property (nonatomic, assign) BOOL didTrackClick;
 @property (nonatomic, assign) BOOL adReady;
 @property (nonatomic, strong, nullable) VASInterstitialAdFactory *interstitialAdFactory;
@@ -22,7 +21,8 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 
 @implementation MPVerizonRewardedVideoCustomEvent
 
-- (BOOL)enableAutomaticImpressionAndClickTracking {
+- (BOOL)enableAutomaticImpressionAndClickTracking
+{
     return NO;
 }
 
@@ -37,7 +37,9 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
     return self;
 }
 
-- (void)requestRewardedVideoWithCustomEventInfo:(NSDictionary<NSString *, id> *)info {
+- (void)requestRewardedVideoWithCustomEventInfo:(NSDictionary<NSString *, id> *)info
+{
+    MPLogAdEvent([MPLogEvent adLoadAttemptForAdapter:NSStringFromClass(self.class) dspCreativeId:nil dspName:nil], self.siteId);
     
     MPLogDebug(@"Requesting VAS rewarded video with event info %@.", info);
 
@@ -46,37 +48,39 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 
     __strong __typeof__(self.delegate) delegate = self.delegate;
     
-    NSString *siteId = info[kMoPubVASAdapterSiteId];
-    if (siteId.length == 0)
+    self.siteId = info[kMoPubVASAdapterSiteId];
+    if (self.siteId.length == 0)
     {
-        siteId = info[kMoPubMillennialAdapterSiteId];
+        self.siteId = info[kMoPubMillennialAdapterSiteId];
     }
+    
     NSString *placementId = info[kMoPubVASAdapterPlacementId];
     if (placementId.length == 0)
     {
         placementId = info[kMoPubMillennialAdapterPlacementId];
     }
-    if (siteId.length == 0 || placementId.length == 0)
+    
+    if (self.siteId.length == 0 || placementId.length == 0)
     {
         NSError *error = [VASErrorInfo errorWithDomain:kMoPubVASAdapterErrorDomain
                                                   code:VASCoreErrorAdFetchFailure
                                                    who:kMoPubVASAdapterErrorWho
                                            description:[NSString stringWithFormat:@"Error occurred while fetching content for requestor [%@]", NSStringFromClass([self class])]
                                             underlying:nil];
-        MPLogError(@"%@", [error localizedDescription]);
+        MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], self.siteId);
         [delegate rewardedVideoDidFailToLoadAdForCustomEvent:self error:error];
         return;
     }
     
     if (![VASAds sharedInstance].initialized &&
-        ![VASStandardEdition initializeWithSiteId:siteId])
+        ![VASStandardEdition initializeWithSiteId:self.siteId])
     {
         NSError *error = [VASErrorInfo errorWithDomain:kMoPubVASAdapterErrorDomain
                                                   code:VASCoreErrorAdFetchFailure
                                                    who:kMoPubVASAdapterErrorWho
                                            description:[NSString stringWithFormat:@"VAS adapter not properly intialized yet."]
                                             underlying:nil];
-        MPLogError(@"%@", [error localizedDescription]);
+        MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], self.siteId);
         [delegate rewardedVideoDidFailToLoadAdForCustomEvent:self error:error];
         return;
     }
@@ -89,7 +93,6 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
     [self.interstitialAdFactory setRequestMetadata:metaDataBuilder.build];
     
     [self.interstitialAdFactory load:self];
-    
 }
 
 - (BOOL)hasAdAvailable
@@ -114,99 +117,156 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 {
     // If we no longer have an ad available, report back up to the application that this ad expired.
     if (![self hasAdAvailable]) {
+       
+        MPLogDebug(@"Ad expired.");
+        
         [self.delegate rewardedVideoDidExpireForCustomEvent:self];
     }
 }
 
--(VASCreativeInfo*)creativeInfo
+- (VASCreativeInfo *)creativeInfo
 {
     return self.interstitialAd.creativeInfo;
 }
 
--(NSString*)version
+- (NSString *)version
 {
-    return kVASAdapterVersion;
+    return VerizonAdapterConfiguration.appMediator;
 }
-
 
 - (void)interstitialAdClicked:(nonnull VASInterstitialAd *)interstitialAd
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoDidReceiveTapEventForCustomEvent:self];
-    });
+    MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
     
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoDidReceiveTapEventForCustomEvent:strongSelf];
+        }
+    });
 }
 
 - (void)interstitialAdDidClose:(nonnull VASInterstitialAd *)interstitialAd
 {
+     MPLogAdEvent([MPLogEvent adDidDismissModalForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoWillDisappearForCustomEvent:self];
-        [self.delegate rewardedVideoDidDisappearForCustomEvent:self];
-        self.interstitialAd = nil;
-        self.delegate = nil;
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoWillDisappearForCustomEvent:strongSelf];
+            [strongSelf.delegate rewardedVideoDidDisappearForCustomEvent:strongSelf];
+            strongSelf.interstitialAd = nil;
+            strongSelf.delegate = nil;
+        }
     });
-
 }
 
 - (void)interstitialAdDidFail:(nonnull VASInterstitialAd *)interstitialAd withError:(nonnull VASErrorInfo *)errorInfo
 {
+    MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:errorInfo], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoDidFailToPlayForCustomEvent:self error:errorInfo];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoDidFailToPlayForCustomEvent:strongSelf error:errorInfo];
+        }
     });
 }
 
 - (void)interstitialAdDidLeaveApplication:(nonnull VASInterstitialAd *)interstitialAd
 {
+    MPLogAdEvent([MPLogEvent adWillLeaveApplicationForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoWillLeaveApplicationForCustomEvent:self];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoWillLeaveApplicationForCustomEvent:strongSelf];
+        }
     });
 }
 
 - (void)interstitialAdDidShow:(nonnull VASInterstitialAd *)interstitialAd
 {
+    MPLogAdEvent([MPLogEvent adWillAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adDidAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoWillAppearForCustomEvent:self];
-        [self.delegate rewardedVideoDidAppearForCustomEvent:self];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoWillAppearForCustomEvent:strongSelf];
+            [strongSelf.delegate rewardedVideoDidAppearForCustomEvent:strongSelf];
+        }
     });
-
 }
 
-- (void)interstitialAdEvent:(nonnull VASInterstitialAd *)interstitialAd source:(nonnull NSString *)source eventId:(nonnull NSString *)eventId arguments:(nullable NSDictionary<NSString *,id> *)arguments
+- (void)interstitialAdEvent:(nonnull VASInterstitialAd *)interstitialAdEvent source:(nonnull NSString *)source eventId:(nonnull NSString *)eventId arguments:(nullable NSDictionary<NSString *,id> *)arguments
 {
+    MPLogTrace(@"VAS interstitialAdEvent: %@, source: %@, eventId: %@, arguments: %@", interstitialAdEvent, source, eventId, arguments);
     
     if ([eventId isEqualToString:kMoPubVASAdapterVideoCompleteEventId]
         && !self.isVideoCompletionEventCalled
         ) {
+        __weak __typeof__(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            MPRewardedVideoReward *reward = [[MPRewardedVideoReward alloc] initWithCurrencyAmount:@1];
-            [self.delegate rewardedVideoShouldRewardUserForCustomEvent:self reward:reward];
-            self.isVideoCompletionEventCalled = YES;
+            __strong __typeof__(self) strongSelf = weakSelf;
+            if (strongSelf != nil)
+            {
+                MPRewardedVideoReward *reward = [[MPRewardedVideoReward alloc] initWithCurrencyAmount:@1];
+                [strongSelf.delegate rewardedVideoShouldRewardUserForCustomEvent:strongSelf reward:reward];
+                strongSelf.isVideoCompletionEventCalled = YES;
+            }
         });
     }
 }
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory cacheLoadedNumRequested:(NSInteger)numRequested numReceived:(NSInteger)numReceived
 {
+    MPLogDebug(@"VAS interstitial factory cache loaded with requested: %lu", (unsigned long)numRequested);
 }
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory cacheUpdatedWithCacheSize:(NSInteger)cacheSize
 {
+    MPLogDebug(@"VAS interstitial factory cache updated with size: %lu", (unsigned long)cacheSize);
 }
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory didFailWithError:(nonnull VASErrorInfo *)errorInfo
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate rewardedVideoDidFailToLoadAdForCustomEvent:self error:errorInfo];
-    });
+    MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:errorInfo], self.siteId);
 
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            [strongSelf.delegate rewardedVideoDidFailToLoadAdForCustomEvent:strongSelf error:errorInfo];
+        }
+    });
 }
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory didLoadInterstitialAd:(nonnull VASInterstitialAd *)interstitialAd
 {
+    MPLogAdEvent([MPLogEvent adLoadSuccessForAdapter:NSStringFromClass(self.class)], self.siteId);
+    
+    __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.interstitialAd = interstitialAd;
-        self.adReady = YES;
-        [self.delegate rewardedVideoDidLoadAdForCustomEvent:self];
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            strongSelf.interstitialAd = interstitialAd;
+            strongSelf.adReady = YES;
+            [strongSelf.delegate rewardedVideoDidLoadAdForCustomEvent:strongSelf];
+        }
     });
 }
 

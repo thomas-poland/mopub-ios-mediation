@@ -5,20 +5,22 @@
 #import "MoPub.h"
 #endif
 
+NSString * const kMoPubVASAdapterVersion = @"1.1.3.0";
+
 NSErrorDomain const kMoPubVASAdapterErrorDomain = @"com.verizon.ads.mopubvasadapter.ErrorDomain";
 NSString * const kMoPubVASAdapterErrorWho = @"MoPubVASAdapter";
 NSString * const kMoPubVASAdapterPlacementId = @"placementId";
 NSString * const kMoPubVASAdapterSiteId = @"siteId";
 NSString * const kMoPubMillennialAdapterPlacementId = @"adUnitID";
 NSString * const kMoPubMillennialAdapterSiteId = @"dcn";
-NSString * const kMoPubVASAdapterVersion = @"1.1.3.0";
+
 NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 
 @implementation VerizonAdapterConfiguration
 
 + (NSString *)appMediator
 {
-    return [NSString stringWithFormat:@"MoPubVAS-%@",kMoPubVASAdapterVersion];
+    return [NSString stringWithFormat:@"MoPubVAS-%@", kMoPubVASAdapterVersion];
 }
 
 + (void)updateInitializationParameters:(NSDictionary *)parameters {}
@@ -35,11 +37,9 @@ NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
         complete(nil);
     }
     
-    MPBLogLevel * logLevel = [[MoPub sharedInstance] logLevel];
-
-    if (logLevel == MPBLogLevelDebug) {
+    if (MPLogging.consoleLogLevel == MPBLogLevelDebug) {
         [VASAds setLogLevel:VASLogLevelDebug];
-    } else if (logLevel == MPBLogLevelInfo) {
+    } else if (MPLogging.consoleLogLevel == MPBLogLevelInfo) {
         [VASAds setLogLevel:VASLogLevelInfo];
     }
 }

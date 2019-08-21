@@ -118,7 +118,6 @@
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory didFailWithError:(nonnull VASErrorInfo *)errorInfo
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
@@ -133,7 +132,6 @@
 
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory didLoadInterstitialAd:(nonnull VASInterstitialAd *)interstitialAd
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
@@ -153,7 +151,6 @@
 
 - (void)interstitialAdClicked:(nonnull VASInterstitialAd *)interstitialAd
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
@@ -177,7 +174,6 @@
 
 - (void)interstitialAdDidFail:(nonnull VASInterstitialAd *)interstitialAd withError:(nonnull VASErrorInfo *)errorInfo
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
@@ -193,7 +189,6 @@
 
 - (void)interstitialAdDidLeaveApplication:(nonnull VASInterstitialAd *)interstitialAd
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;

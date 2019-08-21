@@ -10,6 +10,6 @@ extern NSString * const kVASVideoViewKey;       // NSString *
 
 @property (nonatomic, weak) id<MPNativeAdAdapterDelegate> delegate;
 
-- (instancetype)initWithVASNativeAd:(VASNativeAd *)vasNativeAd;
+- (instancetype)initWithVASNativeAd:(VASNativeAd *)vasNativeAd siteId:(NSString *)siteId;
 
 @end
