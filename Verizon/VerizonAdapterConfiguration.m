@@ -5,7 +5,7 @@
 #import "MoPub.h"
 #endif
 
-NSString * const kMoPubVASAdapterVersion = @"1.1.3.0";
+NSString * const kMoPubVASAdapterVersion = @"1.1.4.0";
 
 NSErrorDomain const kMoPubVASAdapterErrorDomain = @"com.verizon.ads.mopubvasadapter.ErrorDomain";
 NSString * const kMoPubVASAdapterErrorWho = @"MoPubVASAdapter";
@@ -13,7 +13,6 @@ NSString * const kMoPubVASAdapterPlacementId = @"placementId";
 NSString * const kMoPubVASAdapterSiteId = @"siteId";
 NSString * const kMoPubMillennialAdapterPlacementId = @"adUnitID";
 NSString * const kMoPubMillennialAdapterSiteId = @"dcn";
-
 NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 
 @implementation VerizonAdapterConfiguration
