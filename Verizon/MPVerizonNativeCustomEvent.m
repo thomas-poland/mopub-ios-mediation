@@ -37,9 +37,9 @@
     MPLogAdEvent([MPLogEvent adLoadAttemptForAdapter:NSStringFromClass(self.class) dspCreativeId:nil dspName:nil], self.siteId);
     
     MPLogDebug(@"Requesting VAS native with event info %@.", info);
-
+    
     __strong __typeof__(self.delegate) delegate = self.delegate;
-
+    
     self.siteId = info[kMoPubVASAdapterSiteId];
     if (self.siteId.length == 0)
     {
@@ -66,7 +66,7 @@
     
     if (![VASAds sharedInstance].initialized &&
         ![VASStandardEdition initializeWithSiteId:self.siteId])
-     {
+    {
         NSError *error = [VASErrorInfo errorWithDomain:kMoPubVASAdapterErrorDomain
                                                   code:MoPubVASAdapterErrorNotInitialized
                                                    who:kMoPubVASAdapterErrorWho

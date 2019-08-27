@@ -28,7 +28,7 @@ static NSString * const kVideoCompId        = @"video";
     {
         _siteId = siteId;
         _vasNativeAd = vasNativeAd;
-
+        
         // MoPub Native Properties
         NSMutableDictionary<NSString *, id> *properties = [NSMutableDictionary dictionary];
         
@@ -68,7 +68,7 @@ static NSString * const kVideoCompId        = @"video";
         if (videoView) {
             properties[kVASVideoViewKey] = videoView;
         }
-
+        
         VASTextView *disclaimerView = [vasNativeAd text:kDisclaimerCompId];
         if (disclaimerView.text) {
             properties[kVASDisclaimerKey] = disclaimerView.text;
@@ -147,7 +147,7 @@ static NSString * const kVideoCompId        = @"video";
 - (void)nativeAdDidLeaveApplication:(nonnull VASNativeAd *)nativeAd
 {
     MPLogAdEvent([MPLogEvent adWillLeaveApplicationForAdapter:NSStringFromClass(self.class)], self.siteId);
-
+    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;

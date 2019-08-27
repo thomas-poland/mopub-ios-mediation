@@ -42,10 +42,10 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
     MPLogAdEvent([MPLogEvent adLoadAttemptForAdapter:NSStringFromClass(self.class) dspCreativeId:nil dspName:nil], self.siteId);
     
     MPLogDebug(@"Requesting VAS rewarded video with event info %@.", info);
-
+    
     self.adReady = NO;
     self.isVideoCompletionEventCalled = NO;
-
+    
     __strong __typeof__(self.delegate) delegate = self.delegate;
     
     self.siteId = info[kMoPubVASAdapterSiteId];
@@ -102,8 +102,28 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 
 - (void)presentRewardedVideoFromViewController:(UIViewController *)viewController
 {
-    [self.interstitialAd setImmersiveEnabled:YES];
-    [self.interstitialAd showFromViewController:viewController];
+    if([self hasAdAvailable])
+    {
+        [self.interstitialAd setImmersiveEnabled:YES];
+        [self.interstitialAd showFromViewController:viewController];
+        
+        MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], self.siteId);
+        MPLogAdEvent([MPLogEvent adWillAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
+        
+        [self.delegate rewardedVideoWillAppearForCustomEvent:self];
+    }
+    else
+    {
+        NSError *error = [VASErrorInfo errorWithDomain:kMoPubVASAdapterErrorDomain
+                                                  code:VASCoreErrorAdFetchFailure
+                                                   who:kMoPubVASAdapterErrorWho
+                                           description:[NSString stringWithFormat:@"No video available for playback."]
+                                            underlying:nil];
+        MPLogAdEvent([MPLogEvent adShowFailedForAdapter:NSStringFromClass(self.class) error:error], self.siteId);
+        [self.delegate rewardedVideoDidFailToPlayForCustomEvent:self error:error];
+        return;
+    }
+    
 }
 
 - (void)handleCustomEventInvalidated
@@ -117,7 +137,6 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 {
     // If we no longer have an ad available, report back up to the application that this ad expired.
     if (![self hasAdAvailable]) {
-       
         MPLogDebug(@"Ad expired.");
         
         [self.delegate rewardedVideoDidExpireForCustomEvent:self];
@@ -144,13 +163,15 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
         if (strongSelf != nil)
         {
             [strongSelf.delegate rewardedVideoDidReceiveTapEventForCustomEvent:strongSelf];
+            [strongSelf.delegate trackClick];
         }
     });
 }
 
 - (void)interstitialAdDidClose:(nonnull VASInterstitialAd *)interstitialAd
 {
-     MPLogAdEvent([MPLogEvent adDidDismissModalForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adWillDisappearForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adDidDisappearForAdapter:NSStringFromClass(self.class)], self.siteId);
     
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -204,8 +225,8 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
         __strong __typeof__(self) strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            [strongSelf.delegate rewardedVideoWillAppearForCustomEvent:strongSelf];
             [strongSelf.delegate rewardedVideoDidAppearForCustomEvent:strongSelf];
+            [strongSelf.delegate trackImpression];
         }
     });
 }
@@ -243,7 +264,7 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 - (void)interstitialAdFactory:(nonnull VASInterstitialAdFactory *)adFactory didFailWithError:(nonnull VASErrorInfo *)errorInfo
 {
     MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:errorInfo], self.siteId);
-
+    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;

@@ -66,8 +66,8 @@
 }
 
 - (void)storeBid:(nonnull VASBid *)bid
-          forPlacementId:(nonnull NSString *)placementId
-               untilDate:(nonnull NSDate *)expirationDate {
+  forPlacementId:(nonnull NSString *)placementId
+       untilDate:(nonnull NSDate *)expirationDate {
     MPLogDebug(@"Store bid %@-%@ in the cache, expiration date %@", bid, placementId, expirationDate);
     
     [self.cache setObject:bid forKey:placementId];
