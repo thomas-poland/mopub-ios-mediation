@@ -1,6 +1,6 @@
 #import "MPStaticNativeAdRenderer.h"
 
-@interface MPStaticNativeAdRenderer(MPVerizonNativeCustomEvent)
+@interface VerizonNativeAdRenderer : NSObject <MPNativeAdRendererSettings>
 
 + (MPNativeAdRendererConfiguration *)rendererConfigurationWithRendererSettings:(id<MPNativeAdRendererSettings>)rendererSettings;
 

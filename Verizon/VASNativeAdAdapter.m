@@ -113,6 +113,7 @@ static NSString * const kVideoCompId        = @"video";
     MPLogAdEvent([MPLogEvent adWillAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
     MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], self.siteId);
     MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], self.siteId);
+    MPLogAdEvent([MPLogEvent adDidAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
     
     [self.delegate nativeAdWillLogImpression:self];
     [self.vasNativeAd fireImpression];
@@ -122,14 +123,17 @@ static NSString * const kVideoCompId        = @"video";
 
 - (void)nativeAdClickedWithComponentBundle:(nonnull id<VASNativeComponentBundle>)nativeComponentBundle
 {
-    MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            [strongSelf.delegate nativeAdDidClick:strongSelf];
+            if ([self.delegate respondsToSelector:@selector(nativeAdDidClick:)]) {
+                MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
+                [strongSelf.delegate nativeAdDidClick:strongSelf];
+            }
+            
+            [strongSelf.delegate nativeAdWillPresentModalForAdapter:self];
         }
     });
 }
