@@ -1,4 +1,5 @@
-#import "VASNativeAdAdapter.h"
+#import <VerizonAdsNativePlacement/VerizonAdsNativePlacement.h>
+#import "MPVerizonNativeAdAdapter.h"
 #import "MPNativeAdConstants.h"
 #import "MPLogging.h"
 
@@ -14,69 +15,71 @@ static NSString * const kMainImageCompId    = @"mainImage";
 static NSString * const kIconImageCompId    = @"iconImage";
 static NSString * const kVideoCompId        = @"video";
 
-@interface VASNativeAdAdapter()
+@interface MPVerizonNativeAdAdapter() <VASNativeAdDelegate>
 @property (nonatomic, strong) NSString *siteId;
 @property (nonatomic, strong) VASNativeAd *vasNativeAd;
-@property (nonatomic, strong) NSDictionary<NSString *, id> *vasAdProperties;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, id> *vasAdProperties;
 @end
 
-@implementation VASNativeAdAdapter
+@implementation MPVerizonNativeAdAdapter
 
-- (instancetype)initWithVASNativeAd:(VASNativeAd *)vasNativeAd siteId:(NSString *)siteId
+- (instancetype)initWithSiteId:(NSString *)siteId
 {
     if (self = [super init])
     {
         _siteId = siteId;
-        _vasNativeAd = vasNativeAd;
-        
-        // MoPub Native Properties
-        NSMutableDictionary<NSString *, id> *properties = [NSMutableDictionary dictionary];
-        
-        VASTextView *titleView = [vasNativeAd text:kTitleCompId];
-        if (titleView.text) {
-            properties[kAdTitleKey] = titleView.text;
-        }
-        
-        VASTextView *bodyView = [vasNativeAd text:kBodyCompId];
-        if (bodyView.text) {
-            properties[kAdTextKey] = bodyView.text;
-        }
-        
-        VASTextView *ctaView = [vasNativeAd text:kCTACompId];
-        if (ctaView.text) {
-            properties[kAdCTATextKey] = ctaView.text;
-        }
-        
-        VASTextView *ratingView = [vasNativeAd text:kRatingCompId];
-        if (ratingView.text) {
-            properties[kAdStarRatingKey] = @(ratingView.text.integerValue);
-        }
-        
-        VASDisplayMediaView *mainImageView = [vasNativeAd displayMedia:kMainImageCompId];
-        if (mainImageView) {
-            properties[kAdMainMediaViewKey] = mainImageView;
-        }
-        
-        VASDisplayMediaView *iconImageView = [vasNativeAd displayMedia:kIconImageCompId];
-        if (iconImageView) {
-            properties[kAdIconImageViewKey] = iconImageView;
-        }
-        
-        // Verizon Native Properties
-        
-        VASDisplayMediaView *videoView = [vasNativeAd displayMedia:kVideoCompId];
-        if (videoView) {
-            properties[kVASVideoViewKey] = videoView;
-        }
-        
-        VASTextView *disclaimerView = [vasNativeAd text:kDisclaimerCompId];
-        if (disclaimerView.text) {
-            properties[kVASDisclaimerKey] = disclaimerView.text;
-        }
-        
-        _vasAdProperties = properties;
     }
     return self;
+}
+
+- (void)setupWithVASNativeAd:(VASNativeAd *)vasNativeAd
+{
+    self.vasNativeAd = vasNativeAd;
+    self.vasNativeAd.delegate = self;
+    
+    self.vasAdProperties = [NSMutableDictionary dictionary];
+    
+    VASTextView *titleView = [vasNativeAd text:kTitleCompId];
+    if (titleView.text) {
+        self.vasAdProperties[kAdTitleKey] = titleView.text;
+    }
+    
+    VASTextView *bodyView = [vasNativeAd text:kBodyCompId];
+    if (bodyView.text) {
+        self.vasAdProperties[kAdTextKey] = bodyView.text;
+    }
+    
+    VASTextView *ctaView = [vasNativeAd text:kCTACompId];
+    if (ctaView.text) {
+        self.vasAdProperties[kAdCTATextKey] = ctaView.text;
+    }
+    
+    VASTextView *ratingView = [vasNativeAd text:kRatingCompId];
+    if (ratingView.text) {
+        self.vasAdProperties[kAdStarRatingKey] = @(ratingView.text.integerValue);
+    }
+    
+    VASDisplayMediaView *mainImageView = [vasNativeAd displayMedia:kMainImageCompId];
+    if (mainImageView) {
+        self.vasAdProperties[kAdMainMediaViewKey] = mainImageView;
+    }
+    
+    VASDisplayMediaView *iconImageView = [vasNativeAd displayMedia:kIconImageCompId];
+    if (iconImageView) {
+        self.vasAdProperties[kAdIconImageViewKey] = iconImageView;
+    }
+    
+    // Verizon Native Properties
+    
+    VASDisplayMediaView *videoView = [vasNativeAd displayMedia:kVideoCompId];
+    if (videoView) {
+        self.vasAdProperties[kVASVideoViewKey] = videoView;
+    }
+    
+    VASTextView *disclaimerView = [vasNativeAd text:kDisclaimerCompId];
+    if (disclaimerView.text) {
+        self.vasAdProperties[kVASDisclaimerKey] = disclaimerView.text;
+    }
 }
 
 -(void)dealloc
@@ -108,6 +111,25 @@ static NSString * const kVideoCompId        = @"video";
 
 #pragma mark - Impression and Click Tracking
 
+- (void)displayContentForURL:(NSURL *)URL rootViewController:(UIViewController *)controller
+{
+    [self.vasNativeAd invokeDefaultAction];
+    
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong __typeof__(self) strongSelf = weakSelf;
+        if (strongSelf != nil)
+        {
+            if ([strongSelf.delegate respondsToSelector:@selector(nativeAdDidClick:)]) {
+                MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
+                [strongSelf.delegate nativeAdDidClick:strongSelf];
+            }
+            
+            [strongSelf.delegate nativeAdWillPresentModalForAdapter:self];
+        }
+    });
+}
+
 - (void)willAttachToView:(UIView *)view
 {
     MPLogAdEvent([MPLogEvent adWillAppearForAdapter:NSStringFromClass(self.class)], self.siteId);
@@ -128,7 +150,7 @@ static NSString * const kVideoCompId        = @"video";
         __strong __typeof__(self) strongSelf = weakSelf;
         if (strongSelf != nil)
         {
-            if ([self.delegate respondsToSelector:@selector(nativeAdDidClick:)]) {
+            if ([strongSelf.delegate respondsToSelector:@selector(nativeAdDidClick:)]) {
                 MPLogAdEvent([MPLogEvent adTappedForAdapter:NSStringFromClass(self.class)], self.siteId);
                 [strongSelf.delegate nativeAdDidClick:strongSelf];
             }

@@ -1,21 +1,19 @@
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 #import <VerizonAdsCore/VerizonAdsCore.h>
-#import "VerizonAdapterConfiguration.h"
-#if __has_include("MoPub.h")
-#import "MoPub.h"
-#endif
+#import "MPVerizonAdapterConfiguration.h"
 
 NSString * const kMoPubVASAdapterVersion = @"1.1.4.0";
 
-NSErrorDomain const kMoPubVASAdapterErrorDomain = @"com.verizon.ads.mopubvasadapter.ErrorDomain";
 NSString * const kMoPubVASAdapterErrorWho = @"MoPubVASAdapter";
 NSString * const kMoPubVASAdapterPlacementId = @"placementId";
 NSString * const kMoPubVASAdapterSiteId = @"siteId";
 NSString * const kMoPubMillennialAdapterPlacementId = @"adUnitID";
 NSString * const kMoPubMillennialAdapterSiteId = @"dcn";
+
+NSErrorDomain const kMoPubVASAdapterErrorDomain = @"com.verizon.ads.mopubvasadapter.ErrorDomain";
 NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 
-@implementation VerizonAdapterConfiguration
+@implementation MPVerizonAdapterConfiguration
 
 + (NSString *)appMediator
 {

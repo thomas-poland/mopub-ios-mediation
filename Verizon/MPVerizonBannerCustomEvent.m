@@ -5,8 +5,8 @@
 #import "MPLogging.h"
 #import "MPAdConfiguration.h"
 #endif
-#import "VerizonAdapterConfiguration.h"
-#import "VerizonBidCache.h"
+#import "MPVerizonAdapterConfiguration.h"
+#import "MPVerizonBidCache.h"
 
 @interface MPVerizonBannerCustomEvent ()<VASInlineAdFactoryDelegate, VASInlineAdViewDelegate>
 @property (nonatomic, assign) BOOL didTrackClick;
@@ -78,11 +78,11 @@
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
     self.inlineFactory = [[VASInlineAdFactory alloc] initWithPlacementId:placementId adSizes:@[requestedSize] vasAds:[VASAds sharedInstance] delegate:self];
     [self.inlineFactory setRequestMetadata:metaDataBuilder.build];
     
-    VASBid *bid = [VerizonBidCache.sharedInstance bidForPlacementId:placementId];
+    VASBid *bid = [MPVerizonBidCache.sharedInstance bidForPlacementId:placementId];
     
     if (bid) {
         [self.inlineFactory loadBid:bid inlineAdDelegate:self];
@@ -219,9 +219,10 @@
 
 + (void)requestBidWithPlacementId:(nonnull NSString *)placementId
                           adSizes:(nonnull NSArray<VASInlineAdSize *> *)adSizes
-                       completion:(nonnull VASBidRequestCompletionHandler)completion {
+                       completion:(nonnull VASBidRequestCompletionHandler)completion
+{
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
     [VASInlineAdFactory requestBidForPlacementId:placementId
                                          adSizes:adSizes
                                  requestMetadata:metaDataBuilder.build
@@ -229,9 +230,9 @@
                                       completion:^(VASBid * _Nullable bid, VASErrorInfo * _Nullable errorInfo) {
                                           dispatch_async(dispatch_get_main_queue(), ^{
                                               if (bid) {
-                                                  [VerizonBidCache.sharedInstance storeBid:bid
-                                                                            forPlacementId:placementId
-                                                                                 untilDate:[NSDate dateWithTimeIntervalSinceNow:kMoPubVASAdapterSATimeoutInterval]];
+                                                  [MPVerizonBidCache.sharedInstance storeBid:bid
+                                                                              forPlacementId:placementId
+                                                                                   untilDate:[NSDate dateWithTimeIntervalSinceNow:kMoPubVASAdapterSATimeoutInterval]];
                                               }
                                               completion(bid,errorInfo);
                                           });

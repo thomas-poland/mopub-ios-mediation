@@ -4,7 +4,7 @@
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 #import <VerizonAdsInterstitialPlacement/VASInterstitialAd.h>
 #import <VerizonAdsInterstitialPlacement/VASInterstitialAdFactory.h>
-#import "VerizonAdapterConfiguration.h"
+#import "MPVerizonAdapterConfiguration.h"
 
 static NSString *const kMoPubVASAdapterAdUnit = @"adUnitID";
 static NSString *const kMoPubVASAdapterDCN = @"dcn";
@@ -88,7 +88,7 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
     self.interstitialAdFactory = [[VASInterstitialAdFactory alloc] initWithPlacementId:placementId vasAds:[VASAds sharedInstance] delegate:self];
     [self.interstitialAdFactory setRequestMetadata:metaDataBuilder.build];
     
@@ -123,7 +123,6 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
         [self.delegate rewardedVideoDidFailToPlayForCustomEvent:self error:error];
         return;
     }
-    
 }
 
 - (void)handleCustomEventInvalidated
@@ -150,7 +149,7 @@ static NSString *const kMoPubVASAdapterVideoCompleteEventId = @"onVideoComplete"
 
 - (NSString *)version
 {
-    return VerizonAdapterConfiguration.appMediator;
+    return MPVerizonAdapterConfiguration.appMediator;
 }
 
 - (void)interstitialAdClicked:(nonnull VASInterstitialAd *)interstitialAd
