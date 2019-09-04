@@ -4,8 +4,8 @@
 #if __has_include("MoPub.h")
 #import "MPLogging.h"
 #endif
-#import "VerizonAdapterConfiguration.h"
-#import "VerizonBidCache.h"
+#import "MPVerizonAdapterConfiguration.h"
+#import "MPVerizonBidCache.h"
 
 @interface MPVerizonInterstitialCustomEvent () <VASInterstitialAdFactoryDelegate, VASInterstitialAdDelegate>
 
@@ -83,11 +83,11 @@
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
     self.interstitialAdFactory = [[VASInterstitialAdFactory alloc] initWithPlacementId:placementId vasAds:[VASAds sharedInstance] delegate:self];
     [self.interstitialAdFactory setRequestMetadata:metaDataBuilder.build];
     
-    VASBid *bid = [VerizonBidCache.sharedInstance bidForPlacementId:placementId];
+    VASBid *bid = [MPVerizonBidCache.sharedInstance bidForPlacementId:placementId];
     if (bid) {
         [self.interstitialAdFactory loadBid:bid interstitialAdDelegate:self];
     } else {
@@ -224,7 +224,6 @@
 
 - (void)interstitialAdDidClose:(nonnull VASInterstitialAd *)interstitialAd
 {
-    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong __typeof__(self) strongSelf = weakSelf;
@@ -249,15 +248,16 @@
 #pragma mark - Super Auction
 
 + (void)requestBidWithPlacementId:(nonnull NSString *)placementId
-                       completion:(nonnull VASBidRequestCompletionHandler)completion {
+                       completion:(nonnull VASBidRequestCompletionHandler)completion
+{
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
     [VASInterstitialAdFactory requestBidForPlacementId:placementId requestMetadata:metaDataBuilder.build vasAds:[VASAds sharedInstance] completionHandler:^(VASBid * _Nullable bid, VASErrorInfo * _Nullable errorInfo) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (bid) {
-                [VerizonBidCache.sharedInstance storeBid:bid
-                                          forPlacementId:placementId
-                                               untilDate:[NSDate dateWithTimeIntervalSinceNow:kMoPubVASAdapterSATimeoutInterval]];
+                [MPVerizonBidCache.sharedInstance storeBid:bid
+                                            forPlacementId:placementId
+                                                 untilDate:[NSDate dateWithTimeIntervalSinceNow:kMoPubVASAdapterSATimeoutInterval]];
             }
             completion(bid,errorInfo);
         });

@@ -4,9 +4,8 @@
 #elif __has_include(<MoPubSDKFramework/MoPub.h>)
 #import <MoPubSDKFramework/MoPub.h>
 #else
-#import "MPBaseAdapterConfiguration.h"
+#import "MoPub.h"
 #endif
-#import "MPBaseAdapterConfiguration.h"
 
 // Error keys
 extern NSErrorDomain const kMoPubVASAdapterErrorDomain;
@@ -28,9 +27,9 @@ extern NSString * const kMoPubMillennialAdapterSiteId;
 extern NSString * const kMoPubVASAdapterVersion;
 extern NSTimeInterval kMoPubVASAdapterSATimeoutInterval;
 
-@interface VerizonAdapterConfiguration : MPBaseAdapterConfiguration
+@interface MPVerizonAdapterConfiguration : MPBaseAdapterConfiguration
 + (NSString *)appMediator;
 @end
 
-@interface MillennialAdapterConfiguration : VerizonAdapterConfiguration
+@interface MillennialAdapterConfiguration : MPVerizonAdapterConfiguration
 @end
