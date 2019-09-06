@@ -58,7 +58,7 @@ NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 
 - (NSString *)networkSdkVersion
 {
-    return VASAds.sdkInfo.version;
+    return @"1.1.4";
 }
 
 @end
