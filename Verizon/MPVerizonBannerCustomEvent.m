@@ -5,7 +5,7 @@
 #import "MPLogging.h"
 #import "MPAdConfiguration.h"
 #endif
-#import "MPVerizonAdapterConfiguration.h"
+#import "VerizonAdapterConfiguration.h"
 #import "MPVerizonBidCache.h"
 
 @interface MPVerizonBannerCustomEvent ()<VASInlineAdFactoryDelegate, VASInlineAdViewDelegate>
@@ -78,7 +78,7 @@
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
     self.inlineFactory = [[VASInlineAdFactory alloc] initWithPlacementId:placementId adSizes:@[requestedSize] vasAds:[VASAds sharedInstance] delegate:self];
     [self.inlineFactory setRequestMetadata:metaDataBuilder.build];
     
@@ -222,7 +222,7 @@
                        completion:(nonnull VASBidRequestCompletionHandler)completion
 {
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
     [VASInlineAdFactory requestBidForPlacementId:placementId
                                          adSizes:adSizes
                                  requestMetadata:metaDataBuilder.build

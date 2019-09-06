@@ -4,7 +4,7 @@
 #if __has_include("MoPub.h")
 #import "MPLogging.h"
 #endif
-#import "MPVerizonAdapterConfiguration.h"
+#import "VerizonAdapterConfiguration.h"
 #import "MPVerizonBidCache.h"
 
 @interface MPVerizonInterstitialCustomEvent () <VASInterstitialAdFactoryDelegate, VASInterstitialAdDelegate>
@@ -83,7 +83,7 @@
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
     self.interstitialAdFactory = [[VASInterstitialAdFactory alloc] initWithPlacementId:placementId vasAds:[VASAds sharedInstance] delegate:self];
     [self.interstitialAdFactory setRequestMetadata:metaDataBuilder.build];
     
@@ -251,7 +251,7 @@
                        completion:(nonnull VASBidRequestCompletionHandler)completion
 {
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
     [VASInterstitialAdFactory requestBidForPlacementId:placementId requestMetadata:metaDataBuilder.build vasAds:[VASAds sharedInstance] completionHandler:^(VASBid * _Nullable bid, VASErrorInfo * _Nullable errorInfo) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (bid) {

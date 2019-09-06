@@ -3,7 +3,7 @@
 #import "MPLogging.h"
 #import "MPVerizonNativeAdAdapter.h"
 #import "MPVerizonBidCache.h"
-#import "MPVerizonAdapterConfiguration.h"
+#import "VerizonAdapterConfiguration.h"
 #import <VerizonAdsNativePlacement/VerizonAdsNativePlacement.h>
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 
@@ -82,7 +82,7 @@
     [VASAds sharedInstance].locationEnabled = [MoPub sharedInstance].locationUpdatesEnabled;
     
     VASRequestMetadataBuilder *metaDataBuilder = [[VASRequestMetadataBuilder alloc] init];
-    [metaDataBuilder setAppMediator:MPVerizonAdapterConfiguration.appMediator];
+    [metaDataBuilder setAppMediator:VerizonAdapterConfiguration.appMediator];
     self.nativeAdFactory = [[VASNativeAdFactory alloc] initWithPlacementId:placementId adTypes:@[@"inline"] vasAds:[VASAds sharedInstance] delegate:self];
     [self.nativeAdFactory setRequestMetadata:metaDataBuilder.build];
 
@@ -98,7 +98,7 @@
 
 - (NSString *)version
 {
-    return MPVerizonAdapterConfiguration.appMediator;
+    return VerizonAdapterConfiguration.appMediator;
 }
 
 #pragma mark - VASInlineAdFactoryDelegate

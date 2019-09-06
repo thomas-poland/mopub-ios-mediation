@@ -27,9 +27,9 @@ extern NSString * const kMoPubMillennialAdapterSiteId;
 extern NSString * const kMoPubVASAdapterVersion;
 extern NSTimeInterval kMoPubVASAdapterSATimeoutInterval;
 
-@interface MPVerizonAdapterConfiguration : MPBaseAdapterConfiguration
+@interface VerizonAdapterConfiguration : MPBaseAdapterConfiguration
 + (NSString *)appMediator;
 @end
 
-@interface MillennialAdapterConfiguration : MPVerizonAdapterConfiguration
+@interface MillennialAdapterConfiguration : VerizonAdapterConfiguration
 @end
