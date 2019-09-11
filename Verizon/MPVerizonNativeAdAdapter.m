@@ -82,11 +82,6 @@ static NSString * const kVideoCompId        = @"video";
     }
 }
 
--(void)dealloc
-{
-    MPLogTrace(@"Deallocating %@.", self);
-}
-
 #pragma mark - MPNativeAdAdapter
 
 - (NSDictionary *)properties

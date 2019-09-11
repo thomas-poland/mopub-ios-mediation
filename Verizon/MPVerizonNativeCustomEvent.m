@@ -29,11 +29,6 @@
     return self = [super init];
 }
 
--(void)dealloc
-{
-    MPLogTrace(@"Deallocating %@.", self);
-}
-
 - (void)requestAdWithCustomEventInfo:(NSDictionary *)info
 {
     MPLogAdEvent([MPLogEvent adLoadAttemptForAdapter:NSStringFromClass(self.class) dspCreativeId:nil dspName:nil], self.siteId);
