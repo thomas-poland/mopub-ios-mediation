@@ -3,6 +3,7 @@
 #import "VerizonAdapterConfiguration.h"
 
 NSString * const kMoPubVASAdapterVersion = @"1.1.4.0";
+NSString * const kMoPubVASNetworkSdkVersion = @"1.1.4";
 
 NSString * const kMoPubVASAdapterErrorWho = @"MoPubVASAdapter";
 NSString * const kMoPubVASAdapterPlacementId = @"placementId";
@@ -58,7 +59,7 @@ NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 
 - (NSString *)networkSdkVersion
 {
-    return @"1.1.4";
+    return kMoPubVASNetworkSdkVersion;
 }
 
 @end
