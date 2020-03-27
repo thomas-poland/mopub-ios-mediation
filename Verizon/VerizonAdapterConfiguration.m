@@ -1,11 +1,9 @@
 #import <VerizonAdsStandardEdition/VerizonAdsStandardEdition.h>
 #import <VerizonAdsCore/VerizonAdsCore.h>
-#import <VerizonAdsSupport/VASCommon.h>
-#import <VerizonAdsSupport/NSDictionary+VASAds.h>
 #import <CoreTelephony/CTCarrier.h>
 #import "VerizonAdapterConfiguration.h"
 
-NSString * const kMoPubVASAdapterVersion = @"1.4.0.0";
+NSString * const kMoPubVASAdapterVersion = @"1.5.0.0";
 
 NSString * const kMoPubVASAdapterErrorWho = @"MoPubVASAdapter";
 NSString * const kMoPubVASAdapterPlacementId = @"placementId";
@@ -17,10 +15,6 @@ NSTimeInterval kMoPubVASAdapterSATimeoutInterval = 600;
 NSString * const kMoPubVASNetworkName   = @"verizon";
 NSString * const kMoPubServerExtrasAdContent     = @"adMarkup";
 NSString * const kMoPubRequestMetadataAdContent  = @"adContent";
-
-static NSString * const kDomainVASAds           = @"com.verizon.ads";
-static NSString * const kVASEditionNameKey      = @"editionName";
-static NSString * const kVASEditionVersionKey   = @"editionVersion";
 
 @interface VerizonAdapterConfiguration ()
 
