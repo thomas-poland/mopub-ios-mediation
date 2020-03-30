@@ -16,6 +16,9 @@ NSString * const kMoPubVASNetworkName   = @"verizon";
 NSString * const kMoPubServerExtrasAdContent     = @"adMarkup";
 NSString * const kMoPubRequestMetadataAdContent  = @"adContent";
 
+static NSString * const kVASBiddingTokenKey     = @"biddingToken";
+static NSString * const kVASDefaultBiddingToken = @"eJyrVkrNK1OyqlYqTsn2zEvLBzFTUzJLMvPzPFOUrJSKSxLzUhKLUnShgrqGeqZ6Bko6SmWpRcVAPlCJIZBfW1sLAK6jGGM=";
+
 @interface VerizonAdapterConfiguration ()
 
 @end
@@ -71,8 +74,9 @@ NSString * const kMoPubRequestMetadataAdContent  = @"adContent";
 
 - (NSString *)biddingToken
 {
-    VASRequestMetadata *metadata = [[VASAds sharedInstance] requestMetadata];
-    return [[VASAds sharedInstance] biddingTokenUsingMetadata:metadata];
+    return [VASAds.sharedInstance.configuration stringForDomain:kDomainVASAds
+                                                            key:kVASBiddingTokenKey
+                                                    withDefault:kVASDefaultBiddingToken];
 }
 
 - (NSString *)moPubNetworkName
