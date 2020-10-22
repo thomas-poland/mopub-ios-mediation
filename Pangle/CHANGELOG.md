@@ -1,4 +1,7 @@
 ## Changelog	
+   * 3.2.6.2.3
+     * Add support for banner format.
+
    * 3.2.6.2.2
      * Fix ad request failures if Pangle is not initialized with an app ID.
 
