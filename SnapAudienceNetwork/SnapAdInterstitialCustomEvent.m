@@ -2,6 +2,11 @@
 #import "SnapAdAdapterConfiguration.h"
 #import <SAKSDK/SAKSDK.h>
 #import <UIKit/UIKit.h>
+#if __has_include("MoPub.h")
+    #import "MPError.h"
+    #import "MPLogging.h"
+    #import "MoPub.h"
+#endif
 
 static NSString * const kSAKSlotId = @"slotId";
 

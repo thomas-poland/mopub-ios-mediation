@@ -2,6 +2,12 @@
 #import "SnapAdAdapterConfiguration.h"
 #import "SnapAdErrorHelpers.h"
 #import <SAKSDK/SAKSDK.h>
+#if __has_include("MoPub.h")
+    #import "MPLogging.h"
+    #import "MPError.h"
+    #import "MPRewardedVideoError.h"
+    #import "MPReward.h"
+#endif
 
 static NSString *const kSAKSlotId = @"slotId";
 

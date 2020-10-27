@@ -3,6 +3,11 @@
 #import "SnapAdErrorHelpers.h"
 
 #import <SAKSDK/SAKSDK.h>
+#if __has_include("MoPub.h")
+    #import "MPError.h"
+    #import "MPLogging.h"
+    #import "MoPub.h"
+#endif
 
 static NSString *const kSAKSlotId = @"slotId";
 static NSString *const kSAKAdUnitFormat = @"adunit_format";
