@@ -24,6 +24,9 @@
 @dynamic delegate;
 @dynamic localExtras;
 
+CGFloat adWidth;
+CGFloat adHeight;
+
 - (id)init {
   self = [super init];
   if (self) {
@@ -38,8 +41,8 @@
 }
 
 - (void)requestAdWithSize:(CGSize)size adapterInfo:(NSDictionary *)info adMarkup:(NSString *)adMarkup {
-  CGFloat adWidth = size.width;
-  CGFloat adHeight = size.height;
+  adWidth = size.width;
+  adHeight = size.height;
     
   if (adWidth <= 0.0 || adHeight <= 0.0) {
     NSString *failureReason = @"Google AdMob banner failed to load due to invalid ad width and/or height.";
@@ -97,11 +100,22 @@
 #pragma mark GADBannerViewDelegate methods
 
 - (void)adViewDidReceiveAd:(GADBannerView *)bannerView {
-  MPLogAdEvent([MPLogEvent adLoadSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
-  MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
-  MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
+  CGFloat receivedWidth = bannerView.adSize.size.width;
+  CGFloat receivedHeight = bannerView.adSize.size.height;
     
-  [self.delegate inlineAdAdapter:self didLoadAdWithAdView:self.adBannerView];
+  if (receivedWidth > adWidth || receivedHeight > adHeight) {
+    NSString *failureReason = [NSString stringWithFormat:@"Google served an ad but it was invalidated because its size of %.0f x %.0f exceeds the publisher-specified size of %.0f x %.0f", receivedWidth, receivedHeight, adWidth, adHeight];
+    NSError *mopubError = [NSError errorWithCode:MOPUBErrorAdapterInvalid localizedDescription:failureReason];
+
+    MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:mopubError], [self getAdNetworkId]);
+    [self.delegate inlineAdAdapter:self didFailToLoadAdWithError:mopubError];
+  } else {
+    MPLogAdEvent([MPLogEvent adLoadSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
+    MPLogAdEvent([MPLogEvent adShowAttemptForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
+    MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
+          
+    [self.delegate inlineAdAdapter:self didLoadAdWithAdView:self.adBannerView];
+  }
 }
 
 - (void)adView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(GADRequestError *)error {
