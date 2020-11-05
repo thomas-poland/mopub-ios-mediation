@@ -1,4 +1,7 @@
 ## Changelog
+  * 12.7.1.0
+    * This version of the adapters has been certified with Tapjoy 12.7.1 and MoPub SDK 5.14.1.
+
   * 12.7.0.1
     * This version of the adapters has been certified with Tapjoy 12.7.0 and MoPub SDK 5.14.1.
 
