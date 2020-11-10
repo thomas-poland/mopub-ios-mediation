@@ -1,4 +1,7 @@
 ## Changelog
+* 7.0.3.0.1
+    * Fix a bug in `IronSourceAdapterConfiguration.m ` to correctly parse `interstitialStatus`.
+
 * 7.0.3.0.0
     * This version of the adapters has been certified with ironSource 7.0.3.0 and MoPub SDK 5.14.1.
 
