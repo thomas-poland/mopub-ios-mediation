@@ -1,5 +1,8 @@
 
 ## Changelog
+* 3.5.1.0
+  * This version of the adapters has been certified with Unity Ads 3.5.1 and MoPub SDK 5.14.1.
+
 * 3.5.0.0
   * This version of the adapters has been certified with Unity Ads 3.5.0 and MoPub SDK 5.14.1.
   * Note that Unity Ads team does not recommend this version of their SDK with iOS 14. For full compliance, expect an upcoming adapter release for Unity Ads upcoming version 3.5.1.
