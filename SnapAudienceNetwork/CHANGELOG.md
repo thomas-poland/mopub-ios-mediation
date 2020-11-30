@@ -1,4 +1,7 @@
 ## Changelog
+* 1.0.6.4
+  * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
+
 * 1.0.6.3
   * Service release. No new features/changes.
 
