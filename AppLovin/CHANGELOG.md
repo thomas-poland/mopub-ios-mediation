@@ -1,4 +1,7 @@
 ## Changelog
+   * 6.14.9.0
+     * This version of the adapters has been certified with AppLovin SDK 6.14.9 and MoPub SDK 5.15.0.
+     
    * 6.14.8.2
      * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
