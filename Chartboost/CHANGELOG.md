@@ -1,4 +1,7 @@
 ## Changelog
+  * 8.4.0.0
+      * This version of the adapters has been certified with Chartboost 8.4.0 and MoPub SDK 5.15.0.
+
   * 8.3.1.1.2
       * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
