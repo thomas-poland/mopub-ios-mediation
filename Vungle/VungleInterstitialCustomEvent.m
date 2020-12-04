@@ -92,17 +92,13 @@
             
             NSString *supportedOrientation = [self.localExtras objectForKey:kVungleSupportedOrientations];
             if ( supportedOrientation != nil) {
-                int appOrientation = [supportedOrientation intValue];
-                NSNumber *orientations = @(UIInterfaceOrientationMaskAll);
-                
-                if (appOrientation == 1) {
-                    orientations = @(UIInterfaceOrientationMaskLandscape);
-                } else if (appOrientation == 2) {
-                    orientations = @(UIInterfaceOrientationMaskPortrait);
-                }
-                
-                options[VunglePlayAdOptionKeyOrientations] = orientations;
+                [self setOrientationOptions:options supportedOrientation:supportedOrientation];
+            } else if ([VungleAdapterConfiguration orientations] != nil) {
+                [self setOrientationOptions:options supportedOrientation:[VungleAdapterConfiguration orientations]];
             }
+            
+        } else if ([VungleAdapterConfiguration orientations] != nil) {
+            [self setOrientationOptions:options supportedOrientation:[VungleAdapterConfiguration orientations]];
         }
 
         self.options = options.count ? options : nil;
@@ -114,6 +110,20 @@
         MPLogAdEvent([MPLogEvent adShowFailedForAdapter:NSStringFromClass(self.class) error:error], [self getPlacementID]);
         [self.delegate fullscreenAdAdapter:self didFailToLoadAdWithError:error];
     }
+}
+
+- (void)setOrientationOptions:(NSMutableDictionary *)options supportedOrientation:(NSString *)supportedOrientation
+{
+    int appOrientation = [supportedOrientation intValue];
+    NSNumber *orientations = @(UIInterfaceOrientationMaskAll);
+    
+    if (appOrientation == 1) {
+        orientations = @(UIInterfaceOrientationMaskLandscape);
+    } else if (appOrientation == 2) {
+        orientations = @(UIInterfaceOrientationMaskPortrait);
+    }
+    
+    options[VunglePlayAdOptionKeyOrientations] = orientations;
 }
 
 - (void)cleanUp
