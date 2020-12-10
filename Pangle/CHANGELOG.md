@@ -1,4 +1,9 @@
 ## Changelog
+   * 3.3.6.0.0
+     * Drop support for deep link in banner and native ad adapters. 
+     * Support an error argument in the `rewardedVideoAdServerRewardDidFail:` callback
+     * This version of the adapters has been certified with Pangle 3.3.6.0 and MoPub SDK 5.15.0.
+
    * 3.3.1.5.2
      * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 

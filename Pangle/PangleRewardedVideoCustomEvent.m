@@ -182,8 +182,8 @@
     }
 }
 
-- (void)rewardedVideoAdServerRewardDidFail:(BURewardedVideoAd *)rewardedVideoAd {
-    MPLogInfo(@"Rewarded video ad server failed to reward.");
+- (void)rewardedVideoAdServerRewardDidFail:(BURewardedVideoAd *)rewardedVideoAd error:(NSError *)error {
+    MPLogInfo(@"Rewarded video ad server failed to reward: %@", error);
 }
 
 - (NSString *) getAdNetworkId {
