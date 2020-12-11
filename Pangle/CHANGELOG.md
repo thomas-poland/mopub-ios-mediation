@@ -1,4 +1,7 @@
 ## Changelog
+   * 3.3.6.0.1
+     * Service release. No new features.
+     
    * 3.3.6.0.0
      * Drop support for deep link in banner and native ad adapters. 
      * Support an error argument in the `rewardedVideoAdServerRewardDidFail:` callback
