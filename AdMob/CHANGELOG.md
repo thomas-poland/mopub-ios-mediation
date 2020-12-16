@@ -1,4 +1,7 @@
 ## Changelog
+  * 7.69.0.1
+    * Fix a bug where native video playback controls were not responsive to user gestures.
+
   * 7.69.0.0
     * This version of the adapters has been certified with AdMob 7.69.0 and MoPub 5.15.0.
 
