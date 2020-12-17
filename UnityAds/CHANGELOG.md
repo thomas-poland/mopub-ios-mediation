@@ -1,5 +1,8 @@
 
 ## Changelog
+* 3.6.0.0
+  * This version of the adapters has been certified with Unity Ads 3.6.0 and MoPub SDK 5.15.0.
+
 * 3.5.1.2
   * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
