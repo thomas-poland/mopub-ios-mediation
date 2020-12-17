@@ -1,4 +1,7 @@
 ## Changelog
+* 7.0.4.0.0
+    * This version of the adapters has been certified with ironSource 7.0.4.0 and MoPub SDK 5.15.0.
+
 * 7.0.3.0.3
     * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
