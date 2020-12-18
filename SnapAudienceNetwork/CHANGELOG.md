@@ -1,4 +1,7 @@
 ## Changelog
+* 1.0.7.0
+  * This version of the adapters has been certified with SnapAudienceNetwork 1.0.7 and MoPub SDK 5.15.0.
+
 * 1.0.6.4
   * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
