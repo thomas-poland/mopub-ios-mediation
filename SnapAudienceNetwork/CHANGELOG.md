@@ -1,4 +1,7 @@
 ## Changelog
+* 1.0.7.1
+  * Service release. No new features/changes.
+
 * 1.0.7.0
   * This version of the adapters has been certified with SnapAudienceNetwork 1.0.7 and MoPub SDK 5.15.0.
 
