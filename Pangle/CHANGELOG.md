@@ -1,4 +1,9 @@
 ## Changelog
+   * 3.3.6.2.1
+     * Fix native ad icon rendering issue.
+     * Support 1:1 native video size.
+     * Pass `UserExtData` data for Pangle SDK to collect ad source information.
+     
    * 3.3.6.2.0
      * This version of the adapters has been certified with Pangle 3.3.6.2 and MoPub SDK 5.15.0.
 
