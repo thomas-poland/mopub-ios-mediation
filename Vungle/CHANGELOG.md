@@ -1,4 +1,10 @@
 ## Changelog
+* 6.9.1.0
+    * This version of the adapters has been certified with Vungle 6.9.1 and MoPub SDK 5.15.0.
+    * Remove `VungleSDKResetPlacementForDifferentAdSize` error check for loading ads.
+    * Introduce new Vungle SDK delegate `vungleAdViewedForPlacement:` to track impression.
+    * Remove invalid play option key.
+
 * 6.8.1.3
     * Support `orientations` data passing through MoPub initialize in iOS and Unity iOS.
     * Available `orientations` values are: (1) Auto rotate (default): `0` (2) Landscape: `1` (2) Portrait: `2`.

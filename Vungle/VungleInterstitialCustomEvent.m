@@ -76,14 +76,6 @@
                 }
             }
             
-            NSString *flexViewAutoDismissSeconds = [self.localExtras objectForKey:kVungleFlexViewAutoDismissSeconds];
-            if (flexViewAutoDismissSeconds != nil) {
-                NSTimeInterval flexDismissTime = [flexViewAutoDismissSeconds floatValue];
-                if (flexDismissTime > 0) {
-                    options[VunglePlayAdOptionKeyFlexViewAutoDismissSeconds] = @(flexDismissTime);
-                }
-            }
-            
             NSString *muted = [self.localExtras objectForKey:kVungleStartMuted];
             if ( muted != nil) {
                 BOOL startMutedPlaceholder = [muted boolValue];
@@ -153,9 +145,13 @@
 
 - (void)vungleAdDidAppear
 {
-    MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getPlacementID]);
     MPLogAdEvent([MPLogEvent adDidAppearForAdapter:NSStringFromClass(self.class)], [self getPlacementID]);
     [self.delegate fullscreenAdAdapterAdDidAppear:self];
+}
+
+- (void)vungleAdViewed
+{
+    MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getPlacementID]);
     [self.delegate fullscreenAdAdapterDidTrackImpression:self];
 }
 
