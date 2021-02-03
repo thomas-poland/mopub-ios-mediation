@@ -1,4 +1,9 @@
 ## Changelog
+* 1.9.0.0
+    * This version of the adapters has been certified with Verizon 1.9.0 and MoPub 5.15.0.
+    * Refactor native ad impression tracking logic. No external changes for publishers.
+    * Native ads now require a disclaimer/sponsored text view.
+
 * 1.8.1.2
     * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
