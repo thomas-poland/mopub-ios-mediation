@@ -1,4 +1,7 @@
 ## Changelog
+  * 4.5.0.0
+    * This version of the adapters has been certified with AdColony 4.5.0 and MoPub SDK 5.15.0.
+
   * 4.4.1.1.3
     * Replace imports using `MoPubSDKFramework` with `MoPubSDK`. No external impacts to publishers.
 
