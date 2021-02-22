@@ -1,4 +1,7 @@
 ## Changelog
+  * 7.69.0.2
+    * Add support for `fullscreenAdAdapterAdWillDismiss` when a fullscreen creative is about to close. Publishers must use v5.16.1 of the MoPub SDK at the minimum.
+
   * 7.69.0.1
     * Fix a bug where native video playback controls were not responsive to user gestures.
 
