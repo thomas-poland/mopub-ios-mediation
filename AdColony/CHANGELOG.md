@@ -1,4 +1,7 @@
 ## Changelog
+  * 4.5.0.1
+    * Add support for `fullscreenAdAdapterAdWillDismiss` when a fullscreen creative is about to close. Publishers must use v5.16.1 of the MoPub SDK at the minimum.
+
   * 4.5.0.0
     * This version of the adapters has been certified with AdColony 4.5.0 and MoPub SDK 5.15.0.
 
