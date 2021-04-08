@@ -1,4 +1,7 @@
 ## Changelog
+* 6.9.1.2
+  * Address Vungle SDK v6.9.1 deadlock issue.
+  
 * 6.9.1.1
   * Add support for `fullscreenAdAdapterAdWillDismiss` when a fullscreen creative is about to close. Publishers must use v5.16.1 of the MoPub SDK at the minimum.
   
