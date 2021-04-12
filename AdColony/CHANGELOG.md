@@ -1,4 +1,7 @@
 ## Changelog
+  * 4.6.0.0
+    * This version of the adapters has been certified with AdColony 4.6.0 and MoPub SDK 5.16.2.
+
   * 4.5.0.2
     * Service release. No new features or code changes.
 
