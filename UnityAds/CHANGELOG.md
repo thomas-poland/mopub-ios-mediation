@@ -1,5 +1,8 @@
 
 ## Changelog
+* 3.7.1.1
+  * Remove deprecated usage of Rewarded Video APIs.
+
 * 3.7.1.0
   * This version of the adapters has been certified with Unity Ads 3.7.1 and MoPub SDK 5.16.2.
 
