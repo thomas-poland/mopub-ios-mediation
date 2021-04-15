@@ -1,4 +1,7 @@
 ## Changelog
+  * 4.6.0.1
+    * Remove deprecated usage of Rewarded Video APIs.
+
   * 4.6.0.0
     * This version of the adapters has been certified with AdColony 4.6.0 and MoPub SDK 5.16.2.
 
