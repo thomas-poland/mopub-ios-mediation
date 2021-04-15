@@ -15,7 +15,6 @@
     #import <MoPubSDK/MoPub.h>
 #else
     #import "MoPub.h"
-    #import "MPRewardedVideoError.h"
     #import "MPRewardedVideo.h"
 #endif
 
