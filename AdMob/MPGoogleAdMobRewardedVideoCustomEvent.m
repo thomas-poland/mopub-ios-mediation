@@ -3,7 +3,6 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #if __has_include("MoPub.h")
 #import "MPLogging.h"
-#import "MPRewardedVideoError.h"
 #import "MPReward.h"
 #endif
 
@@ -45,7 +44,7 @@
     if (self.admobAdUnitId == nil) {
         NSError *error =
         [NSError errorWithDomain:MoPubRewardedAdsSDKDomain
-                            code:MPRewardedVideoAdErrorInvalidAdUnitID
+                            code:MPRewardedAdErrorInvalidAdUnitID
                         userInfo:@{NSLocalizedDescriptionKey : @"Ad Unit ID cannot be nil."}];
         
         MPLogAdEvent([MPLogEvent adLoadFailedForAdapter:NSStringFromClass(self.class) error:error], [self getAdNetworkId]);
@@ -118,7 +117,7 @@
     } else {
         NSError *error = [NSError
                           errorWithDomain:MoPubRewardedAdsSDKDomain
-                          code:MPRewardedVideoAdErrorNoAdReady
+                          code:MPRewardedAdErrorNoAdReady
                           userInfo:@{NSLocalizedDescriptionKey : @"Rewarded ad is not ready to be presented."}];
         MPLogAdEvent([MPLogEvent adShowFailedForAdapter:NSStringFromClass(self.class) error:error], [self getAdNetworkId]);
         [self.delegate fullscreenAdAdapter:self didFailToShowAdWithError:error];
