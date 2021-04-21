@@ -119,7 +119,7 @@
   }
 }
 
-- (void)adViewDidRecordImpression:(GADBannerView *)bannerView {
+- (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
     MPLogAdEvent([MPLogEvent adShowSuccessForAdapter:NSStringFromClass(self.class)], [self getAdNetworkId]);
 
     [self.delegate inlineAdAdapterDidTrackImpression:self];

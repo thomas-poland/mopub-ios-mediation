@@ -1,4 +1,7 @@
 ## Changelog
+  * 8.3.0.2
+    * Fix impression tracking and auto refresh for banner ads.
+
   * 8.3.0.1
     * Remove deprecated usage of Rewarded Video APIs.
 
