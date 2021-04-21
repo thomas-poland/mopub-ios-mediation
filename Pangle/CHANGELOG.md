@@ -1,4 +1,7 @@
 ## Changelog
+   * 3.5.1.2.0
+     * This version of the adapters has been certified with Pangle 3.5.1.2 and MoPub SDK 5.16.2.
+
    * 3.5.1.0.1
      * Remove deprecated usage of Rewarded Video APIs.
 
