@@ -1,4 +1,7 @@
 ## Changelog
+* 1.1.0.0
+  * This version of the adapters has been certified with SnapAudienceNetwork 1.1.0 and MoPub SDK 5.16.2.
+
 * 1.0.8.1
   * Remove deprecated usage of Rewarded Video APIs.
 
